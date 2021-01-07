@@ -7,7 +7,7 @@ A general purpose config server.
 Basic URL Structure:
 
 ```
-GET http://{host}/conf?app={name}&env={name}&v={version}
+GET http://{host}?app={name}&env={name}&v={version}
 ```
 
 
@@ -85,7 +85,7 @@ host: localhost:6379
 **request:**
 
 ```bash
-curl "http://example.com/conf?app=foo&env=dev&v=3.2.1"
+curl "http://example.com?app=foo&env=dev&v=3.2.1"
 ```
 
 **response:**
