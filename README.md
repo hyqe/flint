@@ -85,7 +85,7 @@ host: localhost:6379
 **request:**
 
 ```bash
-curl "http://flint.example.com/conf?app=foo&env=dev&v=3.2.1"
+curl "http://example.com/conf?app=foo&env=dev&v=3.2.1"
 ```
 
 **response:**
