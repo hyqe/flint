@@ -98,12 +98,12 @@ curl "http://example.com?app=foo&env=dev&v=3.2.1"
     "db": {
         "logs": "https://log.example.com",
         "mysql": {
-            "host":"localhost:3306",
-            "user":"user1",
-            "pass":"passwd1"
+            "host": "localhost:3306",
+            "user": "user1",
+            "pass": "passwd1"
         },
         "redis": {
-            "host":"redis.example.com"
+            "host": "localhost:6379"
         }
     }
 }
