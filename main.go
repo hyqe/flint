@@ -41,14 +41,23 @@ func main() {
 }
 
 func run(c *cli.Context) error {
+	verbose := c.Bool("verbose")
+	port := c.Int("port")
+
 	handler := &Handler{
 		Cache:   NewCache(),
-		Verbose: c.Bool("verbose"),
+		Verbose: verbose,
 	}
-	return graceful.Run(graceful.NewServer(
+
+	server := graceful.NewServer(
 		graceful.WithHandler(handler),
-		graceful.WithPort(c.Int("port")),
-	))
+		graceful.WithPort(port),
+	)
+
+	if verbose {
+		log.Println("starting flint on port:", port)
+	}
+	return graceful.Run(server)
 }
 
 //go:embed LICENSE
