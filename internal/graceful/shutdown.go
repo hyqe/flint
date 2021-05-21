@@ -28,9 +28,6 @@ func Run(x StartStoper) error {
 		startErr <- x.Start()
 	}()
 
-	defer close(startErr)
-	defer close(stop)
-
 	select {
 	case err := <-startErr:
 		return err
