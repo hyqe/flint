@@ -9,7 +9,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hyqe/flint/internal/graceful"
+	"github.com/hyqe/graceful"
 	cli "github.com/urfave/cli/v2"
 )
 
