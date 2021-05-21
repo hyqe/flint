@@ -62,12 +62,8 @@ curl -X DELETE 'http://localhost:2000/foo'
 
 ## Docker
 
-build
-
-```bash
-git clone https://github.com/hyqe/flint
-cd flint
-docker build . -t flint
+```
+docker pull hyqe/flint:latest
 ```
 
 run 
@@ -76,7 +72,7 @@ run
 docker run \
     -p 2000:2000 \
     --name flint \
-    flint
+    hyqe/flint
 ```
 
 
@@ -87,5 +83,5 @@ docker run \
     -p 2000:2000 \
     --restart unless-stopped \
     --name flint \
-    flint
+    hyqe/flint
 ```
