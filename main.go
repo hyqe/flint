@@ -9,12 +9,17 @@ import (
 	"strings"
 	"sync"
 
+	_ "embed"
+
 	"github.com/hyqe/graceful"
 	cli "github.com/urfave/cli/v2"
 )
 
 func main() {
 	cliApp := &cli.App{
+		Name:        "Flint",
+		Description: "A simple http key/value store",
+		Copyright:   License,
 		Flags: []cli.Flag{
 			&cli.IntFlag{
 				Name:    "port",
@@ -46,22 +51,24 @@ func run(c *cli.Context) error {
 	))
 }
 
+//go:embed LICENSE
+var License string
+
 type Handler struct {
 	Cache
 	Verbose bool
 }
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if h.Verbose {
-		log.Println(r.Method, r.URL.Path)
-	}
+	var body []byte
+	var err error
 	switch r.Method {
 	case http.MethodGet:
 		if v, ok := h.Get(r.URL.Path); ok {
 			content, ok := v.(Content)
 			if !ok {
 				Internal(w, "failed to read cache")
-				return
+				break
 			}
 			w.Header().Set(HeaderContentType, content.Type)
 			w.Write(content.Body)
@@ -71,13 +78,13 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPut:
 		if r.Body == nil {
 			Bad(w, "empty body")
-			return
+			break
 		}
 
-		body, err := io.ReadAll(r.Body)
+		body, err = io.ReadAll(r.Body)
 		if err != nil {
 			Internal(w, fmt.Sprintf("failed to read body: %v", err))
-			return
+			break
 		}
 
 		h.Put(r.URL.Path, Content{
@@ -87,10 +94,12 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case http.MethodDelete:
 		if !h.Delete(r.URL.Path) {
 			NotFound(w)
-			return
 		}
 	default:
 		NotFound(w)
+	}
+	if h.Verbose {
+		log.Println(r.Method, r.URL.Path, string(body))
 	}
 }
 
