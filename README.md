@@ -1,39 +1,27 @@
-# Flint
+# Flint <img src="https://static.wikia.nocookie.net/minecraft/images/6/67/FlintNew.png" alt="flint" width="36"/>
 
-At its core, Flint is just a key/value store, where the key is the http request path, and the value is the http request body. Flint will also preserve the content type of the PUT request so that subsequent GET requests return the same value. 
+Flint is a key/value store, where the key is the http request path, and the value is the http request body.
 
+## Install
 
-## CMD
-```
-NAME:
-   Flint
+If you have go installed, run:
 
-USAGE:
-   main [global options] command [command options] [arguments...]
-
-DESCRIPTION:
-   A simple http key/value store
-
-COMMANDS:
-   help, h  Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --port value, -p value  (default: 2000)
-   --verbose, -v           (default: false)
-   --help, -h              show help (default: false)
+```bash
+go install github.com/hyqe/flint@latest
 ```
 
+to get help run:
 
-## HTTP API
+```
+flint -h
+```
 
-flint has only three end-points.
+## run
 
-| Method | Path | Body |
-| ------ | ---- | ---- |
-| PUT    | *    | *    |
-| GET    | *    | null |
-| DELETE | *    | null |
-
+run the server in verbose mode:
+```
+flint --verbose
+```
 
 ### Examples
 
@@ -43,8 +31,8 @@ flint has only three end-points.
 curl -X PUT 'http://localhost:2000/foo' \
 -H 'Content-Type: application/json' \
 -d'{
-    "a": "1",
-    "b": "2"
+    "a": 1,
+    "b": 2
 }'
 ```
 
@@ -52,6 +40,17 @@ curl -X PUT 'http://localhost:2000/foo' \
 
 ```
 curl 'http://localhost:2000/foo'
+```
+
+returns:
+```
+Content-Type: application/json
+```
+```
+{
+    "a": 1,
+    "b": 2
+}
 ```
 
 **DELETE**
@@ -66,6 +65,8 @@ curl -X DELETE 'http://localhost:2000/foo'
 build
 
 ```bash
+git clone https://github.com/hyqe/flint
+cd flint
 docker build . -t flint
 ```
 
@@ -79,7 +80,7 @@ docker run \
 ```
 
 
-run forever
+run forever in the background
 ```bash
 docker run \
     -d \

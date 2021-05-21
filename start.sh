@@ -1,17 +1,18 @@
 #!/bin/bash
 
-image="flint"
+tag=$(cat VERSION)
+image="flint:$tag"
 container="flint"
 
-echo "building image..."
+echo "building $image"
 docker build . -t $image
 
-echo "removing old container..."
+echo "removing $container"
 docker rm -f $container
 
-echo "running image..."
+echo "running $image as $container"
 docker run \
     -p 2000:2000 \
     --name $container \
     $image \
-        -v
+        --verbose

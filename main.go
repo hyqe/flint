@@ -18,17 +18,19 @@ import (
 func main() {
 	cliApp := &cli.App{
 		Name:        "Flint",
-		Description: "A simple http key/value store",
-		Copyright:   License,
+		Description: "\n" + Docs,
+		Copyright:   "\n" + License,
+		Version:     Version,
 		Flags: []cli.Flag{
 			&cli.IntFlag{
 				Name:    "port",
 				Aliases: []string{"p"},
+				EnvVars: []string{"FLINT_PORT"},
 				Value:   2000,
 			},
 			&cli.BoolFlag{
 				Name:    "verbose",
-				Aliases: []string{"v"},
+				EnvVars: []string{"FLINT_VERBOSE"},
 				Value:   false,
 			},
 		},
@@ -60,8 +62,16 @@ func run(c *cli.Context) error {
 	return graceful.Run(server)
 }
 
-//go:embed LICENSE
-var License string
+var (
+	//go:embed LICENSE
+	License string
+
+	//go:embed VERSION
+	Version string
+
+	//go:embed docs.md
+	Docs string
+)
 
 type Handler struct {
 	Cache
