@@ -11,7 +11,7 @@ docker rm -f $container
 
 echo "running image..."
 docker run \
-    -p 1389:1389 \
+    -p 2000:2000 \
     --name $container \
     $image \
         -v

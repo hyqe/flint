@@ -18,7 +18,7 @@ COMMANDS:
    help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --port value, -p value  (default: 1389)
+   --port value, -p value  (default: 2000)
    --verbose, -v           (default: false)
    --help, -h              show help (default: false)
 ```
@@ -40,7 +40,7 @@ flint has only three end-points.
 **PUT**
 
 ```
-curl -X PUT 'http://localhost:1389/foo' \
+curl -X PUT 'http://localhost:2000/foo' \
 -H 'Content-Type: application/json' \
 -d'{
     "a": "1",
@@ -51,13 +51,13 @@ curl -X PUT 'http://localhost:1389/foo' \
 **GET**
 
 ```
-curl 'http://localhost:1389/foo'
+curl 'http://localhost:2000/foo'
 ```
 
 **DELETE**
 
 ```
-curl -X DELETE 'http://localhost:1389/foo'
+curl -X DELETE 'http://localhost:2000/foo'
 ```
 
 
@@ -73,7 +73,7 @@ run
 
 ```bash
 docker run \
-    -p 1389:1389 \
+    -p 2000:2000 \
     --name flint \
     flint
 ```
@@ -83,7 +83,7 @@ run forever
 ```bash
 docker run \
     -d \
-    -p 1389:1389 \
+    -p 2000:2000 \
     --restart unless-stopped \
     --name flint \
     flint

@@ -24,7 +24,7 @@ func main() {
 			&cli.IntFlag{
 				Name:    "port",
 				Aliases: []string{"p"},
-				Value:   1389,
+				Value:   2000,
 			},
 			&cli.BoolFlag{
 				Name:    "verbose",
@@ -55,7 +55,7 @@ func run(c *cli.Context) error {
 	)
 
 	if verbose {
-		log.Println("starting flint on port:", port)
+		log.Printf("starting Flint on port: %v\n", port)
 	}
 	return graceful.Run(server)
 }
