@@ -12,9 +12,24 @@ import (
 	cli "github.com/urfave/cli/v2"
 )
 
+const (
+	AppName = "Flint"
+)
+
+var (
+	//go:embed LICENSE
+	License string
+
+	//go:embed VERSION
+	Version string
+
+	//go:embed docs.md
+	Docs string
+)
+
 func main() {
 	cliApp := &cli.App{
-		Name:        "Flint",
+		Name:        AppName,
 		Description: "\n" + Docs,
 		Copyright:   "\n" + License,
 		Version:     Version,
@@ -32,14 +47,14 @@ func main() {
 			},
 		},
 	}
-	cliApp.Action = run
+	cliApp.Action = action
 	err := cliApp.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func run(c *cli.Context) error {
+func action(c *cli.Context) error {
 	verbose := c.Bool("verbose")
 	port := c.Int("port")
 
@@ -58,14 +73,3 @@ func run(c *cli.Context) error {
 	}
 	return graceful.Run(server)
 }
-
-var (
-	//go:embed LICENSE
-	License string
-
-	//go:embed VERSION
-	Version string
-
-	//go:embed docs.md
-	Docs string
-)
