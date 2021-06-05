@@ -3,11 +3,12 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	_ "embed"
 
-	"github.com/hyqe/flint/internal/cache"
 	"github.com/hyqe/flint/internal/handlers"
+	"github.com/hyqe/flint/internal/storage"
 	"github.com/hyqe/graceful"
 	cli "github.com/urfave/cli/v2"
 )
@@ -30,6 +31,7 @@ var (
 func main() {
 	cliApp := &cli.App{
 		Name:        AppName,
+		Usage:       "A simple HTTP key/value store.",
 		Description: "\n" + Docs,
 		Copyright:   "\n" + License,
 		Version:     Version,
@@ -38,12 +40,20 @@ func main() {
 				Name:    "port",
 				Aliases: []string{"p"},
 				EnvVars: []string{"FLINT_PORT"},
+				Usage:   "The HTTP port Flint will bind to.",
 				Value:   2000,
 			},
 			&cli.BoolFlag{
 				Name:    "verbose",
 				EnvVars: []string{"FLINT_VERBOSE"},
+				Usage:   "Causes Flint to print events to standard out.",
 				Value:   false,
+			},
+			&cli.StringFlag{
+				Name:    "storage",
+				EnvVars: []string{"FLINT_STORAGE"},
+				Usage:   "A directory to store values to disk. If left blank, Flint will only cache in memory.",
+				Value:   "",
 			},
 		},
 	}
@@ -57,9 +67,22 @@ func main() {
 func action(c *cli.Context) error {
 	verbose := c.Bool("verbose")
 	port := c.Int("port")
+	storagePath := c.String("storage")
+
+	var store storage.Storage = &storage.Memory{}
+	if strings.TrimSpace(storagePath) != "" {
+		if _, err := os.Stat(storagePath); os.IsNotExist(err) {
+			if err := os.MkdirAll(storagePath, os.ModePerm); err != nil {
+				log.Fatal(err)
+			}
+		}
+		store = &storage.FS{
+			Path: storagePath,
+		}
+	}
 
 	handler := &handlers.Flint{
-		Cacher:  cache.New(),
+		Storage: store,
 		Verbose: verbose,
 	}
 
