@@ -31,6 +31,7 @@ var (
 func main() {
 	cliApp := &cli.App{
 		Name:        AppName,
+		Usage:       "A simple HTTP key/value store.",
 		Description: "\n" + Docs,
 		Copyright:   "\n" + License,
 		Version:     Version,
@@ -39,17 +40,19 @@ func main() {
 				Name:    "port",
 				Aliases: []string{"p"},
 				EnvVars: []string{"FLINT_PORT"},
+				Usage:   "The HTTP port Flint will bind to.",
 				Value:   2000,
 			},
 			&cli.BoolFlag{
 				Name:    "verbose",
 				EnvVars: []string{"FLINT_VERBOSE"},
+				Usage:   "Causes Flint to print events to standard out.",
 				Value:   false,
 			},
 			&cli.StringFlag{
 				Name:    "storage",
 				EnvVars: []string{"FLINT_STORAGE"},
-				Usage:   "a directory to store values to disk",
+				Usage:   "A directory to store values to disk. If left blank, Flint will only cache in memory.",
 				Value:   "",
 			},
 		},
