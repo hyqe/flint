@@ -45,6 +45,11 @@ func main() {
 				EnvVars: []string{"FLINT_VERBOSE"},
 				Value:   false,
 			},
+			&cli.PathFlag{
+				Name:    "storage",
+				EnvVars: []string{"FLINT_STORAGE"},
+				Value:   "",
+			},
 		},
 	}
 	cliApp.Action = action
@@ -57,9 +62,10 @@ func main() {
 func action(c *cli.Context) error {
 	verbose := c.Bool("verbose")
 	port := c.Int("port")
+	storage := c.Path("storage")
 
 	handler := &handlers.Flint{
-		Cacher:  cache.New(),
+		Storage: cache.New(),
 		Verbose: verbose,
 	}
 

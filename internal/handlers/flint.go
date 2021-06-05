@@ -7,11 +7,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hyqe/flint/internal/cache"
+	"github.com/hyqe/flint/internal/storage"
+	"google.golang.org/genproto/googleapis/cloud/bigquery/storage/v1"
 )
 
 type Flint struct {
-	cache.Cacher
+	storage.Storage
 	Verbose bool
 }
 
@@ -41,7 +42,7 @@ func (h *Flint) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("failed to read body: %v", err), http.StatusInternalServerError)
 			break
 		}
-		h.Put(r.URL.Path, Content{
+		h.Create(r.URL.Path, Content{
 			Body: body,
 			Type: GetContentType(r),
 		})
