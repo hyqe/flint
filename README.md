@@ -2,86 +2,62 @@
 
 Flint is a key/value store, where the key is the http request path, and the value is the http request body.
 
-## Install
+## Quick Start
 
-If you have go installed, run:
+```
+docker run -p 2000:2000 hyqe/flint --verbose
+```
+
+put a value
 
 ```bash
-go install github.com/hyqe/flint@latest
+curl -X PUT 'http://localhost:2000/foo' -H 'Content-Type: application/json' -d'{"foo": "bar"}'
 ```
 
-to get help run:
+get the value back
 
-```
-flint -h
-```
-
-## run
-
-run the server in verbose mode:
-```
-flint --verbose
-```
-
-### Examples
-
-**PUT**
-
-```
-curl -X PUT 'http://localhost:2000/foo' \
--H 'Content-Type: application/json' \
--d'{
-    "a": 1,
-    "b": 2
-}'
-```
-
-**GET**
-
-```
+```bash
 curl 'http://localhost:2000/foo'
 ```
 
-returns:
 ```
 Content-Type: application/json
-```
-```
-{
-    "a": 1,
-    "b": 2
-}
+
+{"foo": "bar"}
 ```
 
-**DELETE**
+delete the value
 
-```
+```bash
 curl -X DELETE 'http://localhost:2000/foo'
 ```
 
 
 ## Docker
 
-```
+```bash
 docker pull hyqe/flint:latest
 ```
 
-run 
+Run temporarily in the terminal. 
 
 ```bash
-docker run \
-    -p 2000:2000 \
-    --name flint \
-    hyqe/flint
+docker run -p 2000:2000 hyqe/flint --verbose
 ```
 
 
-run forever in the background
+Run forever in the background with storage that persists after reboots.
+
 ```bash
+mkdir -p ~/.flint
+
 docker run \
     -d \
     -p 2000:2000 \
+    -v ~/.flint:/app/cache \
     --restart unless-stopped \
     --name flint \
-    hyqe/flint
+    hyqe/flint:latest \
+        --storage cache \
+        --verbose
 ```
