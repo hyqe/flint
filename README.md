@@ -11,13 +11,13 @@ docker run -p 2000:2000 hyqe/flint --verbose
 put a value
 
 ```bash
-curl -X PUT 'http://localhost:2000/foo' -H 'Content-Type: application/json' -d'{"foo": "bar"}'
+curl -X PUT 'http://localhost:2000/foo' -H 'Content-Type: application/json' -d'{"foo": "bar"}' -i
 ```
 
 get the value back
 
 ```bash
-curl 'http://localhost:2000/foo'
+curl 'http://localhost:2000/foo' -i
 ```
 
 ```
@@ -29,7 +29,7 @@ Content-Type: application/json
 delete the value
 
 ```bash
-curl -X DELETE 'http://localhost:2000/foo'
+curl -X DELETE 'http://localhost:2000/foo' -i
 ```
 
 
