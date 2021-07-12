@@ -40,7 +40,14 @@ func (f *FS) Get(k string, v interface{}) error {
 	f.RLock()
 	defer f.RUnlock()
 
-	return readGobFile(key, v)
+	ok, err := readGobFile(key, v)
+	if err != nil {
+		return &Internal{Message: fmt.Sprintf("an unexpected error occurred when reading from '%v': %v", k, err)}
+	}
+	if !ok {
+		return &NotFound{Message: fmt.Sprintf("value for '%v' was not found", k)}
+	}
+	return nil
 }
 func (f *FS) Delete(k string) error {
 	key := f.filePath(k)
@@ -88,16 +95,29 @@ func deleteFile(name string) error {
 	return nil
 }
 
-func readGobFile(name string, v interface{}) error {
+func readGobFile(name string, v interface{}) (bool, error) {
+	if !fileExists(name) {
+		return false, nil
+	}
+
 	file, err := os.Open(name)
-	if errors.Is(err, os.ErrNotExist) {
-		return &NotFound{Message: err.Error()}
+	switch err.(type) {
+	case *os.PathError:
+		return false, err
 	}
 	defer file.Close()
 
 	err = gob.NewDecoder(file).Decode(v)
 	if err != nil {
-		return &Internal{Message: err.Error()}
+		return true, err
 	}
-	return nil
+	return true, nil
+}
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }
