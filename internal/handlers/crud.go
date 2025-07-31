@@ -12,7 +12,7 @@ type Value struct {
 	Body        []byte
 }
 
-func HandleGet(m *http.ServeMux, lookup *memory.Lookup[*Value]) {
+func HandleGet(m ServeMux, lookup *memory.Lookup[*Value]) {
 	m.HandleFunc("GET /{key}", func(w http.ResponseWriter, r *http.Request) {
 		key := r.PathValue("key")
 		v, ok := lookup.Get(key)
@@ -33,7 +33,7 @@ func HandleGet(m *http.ServeMux, lookup *memory.Lookup[*Value]) {
 
 const maxPutReadBytes = 1_000_000_000
 
-func HandlePut(m *http.ServeMux, lookup *memory.Lookup[*Value]) {
+func HandlePut(m ServeMux, lookup *memory.Lookup[*Value]) {
 	m.HandleFunc("PUT /{key}", func(w http.ResponseWriter, r *http.Request) {
 		key := r.PathValue("key")
 		if r.Body == nil {
@@ -54,7 +54,7 @@ func HandlePut(m *http.ServeMux, lookup *memory.Lookup[*Value]) {
 	})
 }
 
-func HandleDelete(m *http.ServeMux, lookup *memory.Lookup[*Value]) {
+func HandleDelete(m ServeMux, lookup *memory.Lookup[*Value]) {
 	m.HandleFunc("DELETE /{key}", func(w http.ResponseWriter, r *http.Request) {
 		key := r.PathValue("key")
 		lookup.Delete(key)
