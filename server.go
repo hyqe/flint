@@ -20,7 +20,7 @@ func runServer(ctx context.Context, c serverConfig, handler http.Handler) error 
 	defer cancel()
 	server := http.Server{
 		Addr:    net.JoinHostPort("", c.Port),
-		Handler: handler,
+		Handler: LogRequests(handler),
 	}
 	var wg sync.WaitGroup
 	var errShutdown error
